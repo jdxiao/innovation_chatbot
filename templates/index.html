@@ -1,3 +1,4 @@
+<!-- website frontend -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- website banner graphics -->
     <div class="header">
     <img src="{{ url_for('static', filename='images/redleaf.png') }}" alt="temp1" style="position: absolute; left: 14%; top: 20%; width: 5%; height: auto;">
     <img src="{{ url_for('static', filename='images/orangeleaf.png') }}" alt="temp1" style="position: absolute; left: 2%; top: 20%; width: 5%; height: auto;">
@@ -21,27 +23,17 @@
     <img src="{{ url_for('static', filename='images/threeleaf.png') }}" alt="temp1" style="position: absolute; left: 0%; top: 15%; width: 20%; height: auto;">
     <img src="{{ url_for('static', filename='images/twoleaf.png') }}" alt="temp1" style="position: absolute; left: 5%; top: 60%; width: 20%; height: auto;">
 
-
-    <!--
-    <img src="{{ url_for('static', filename='images/redleaf.png') }}" alt="temp1" style="position: absolute; right: 6%; top: 30%; width: 5%; height: auto;">
-    <img src="{{ url_for('static', filename='images/redleaf.png') }}" alt="temp1" style="position: absolute; right: 14%; top: 30%; width: 5%; height: auto;">
-
-    <img src="{{ url_for('static', filename='images/orangeleaf.png') }}" alt="temp1" style="position: absolute; right: 2%; top: 43%; width: 5%; height: auto;">
-    <img src="{{ url_for('static', filename='images/pinkleaf.png') }}" alt="temp1" style="position: absolute; right: 6%; top: 48%; width: 5%; height: auto;">
-    <img src="{{ url_for('static', filename='images/orangeleaf.png') }}" alt="temp1" style="position: absolute; right: 10%; top: 50%; width: 5%; height: auto;">
-    <img src="{{ url_for('static', filename='images/pinkleaf.png') }}" alt="temp1" style="position: absolute; right: 14%; top: 48%; width: 5%; height: auto;">
-    <img src="{{ url_for('static', filename='images/orangeleaf.png') }}" alt="temp1" style="position: absolute; right: 18%; top: 43%; width: 5%; height: auto;">
-    -->
-
     <!-- right sidebar -->
     <img src="{{ url_for('static', filename='images/logoleaf.png') }}" alt="temp1" style="position: absolute; right: 2%; top: 35%; width: 20%; height: auto;">
 
     <img src="{{ url_for('static', filename='images/threeleaf.png') }}" alt="temp1" style="position: absolute; right: 2%; bottom: 2%; width: 10%; height: auto; rotate: 30deg;">
     <img src="{{ url_for('static', filename='images/twoleaf.png') }}" alt="temp1" style="position: absolute; right: 15%; top: 15%; width: 10%; height: auto; rotate: 330deg;">
-
+    
+    <!-- main chatbot content -->
     <div class="chat-container">
         <div id="chatHistory" class="chat-history"></div>
         
+        <!-- text box for user input -->
         <div class="chat-input">
             <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
             <button id="sendButton" onclick="sendMessage()">Send</button>
@@ -49,7 +41,7 @@
     </div>
 
     <script>
-        // set up chat history
+        // chat history
         const MAX_HISTORY = 5;
         
         async function sendMessage() {
@@ -60,6 +52,7 @@
             addMessage('user-message', message);
             input.value = '';
             
+            // send message to server
             try {
                 const response = await fetch('/chat', {
                     method: 'POST',
@@ -68,16 +61,21 @@
                 });
                 const data = await response.json();
                 addMessage('bot-message', data.response);
-            } catch (error) {
+            }
+            // error handling 
+            catch (error) {
                 addMessage('bot-message', 'Error: Could not connect to server');
                 console.error('Error:', error);
             }
         }
         
+        // add message to chat history
         function addMessage(className, text) {
             const history = document.getElementById('chatHistory');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${className}`;
+
+            // formatting text
             messageDiv.innerHTML = text
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>');
@@ -94,6 +92,7 @@
             history.scrollTop = history.scrollHeight;
         }
         
+        // send message on enter key press (in addition to button click)
         document.getElementById('userInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });

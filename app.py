@@ -18,6 +18,9 @@ categories = ["overview", "ICT", "manufacturing", "clean energy", "creative indu
 # function to analyze user input using DeepSeek
 def analyze_user_input(user_input):
     # define the system message for the analysis prompt
+    # used to classify the user input into categories and types for RAG
+    # categories: overview, ICT, manufacturing, clean energy, creative industries
+    # types: background, proposal, both
     system_message = """
     Please analyze the following user input and classify it into one of the following categories: "overview", "ICT", "manufacturing", "clean energy", "creative industries".
     Also, classify whether the query is about "background", "proposal", or both. If the query is about both, specify that. Please return the results in the following format:
@@ -70,6 +73,7 @@ def retrieve_context(identified_category, is_background, is_proposal):
 # function to generate the final response using DeepSeek
 def chat_with_ai(user_input, context):
     try:
+        # main system prompt for the model
         response = client.chat.completions.create(
             model="deepseek-chat",
             messages=[{"role": "system", "content": """
@@ -99,6 +103,7 @@ def chat_with_ai(user_input, context):
             {"role": "system", "content": context}],
             temperature=0.7
         )
+        # parse the response and remove the word count (identified through testing)
         result = response.choices[0].message.content.split("(Word count:")[0].strip()
         return result
     except Exception as e:
