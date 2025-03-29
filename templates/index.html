@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <h1>Group 9 Chatbot</h1>
+    </div>
+    
+    <div class="chat-container">
+        <div id="chatHistory" class="chat-history"></div>
+        
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+            <button id="sendButton" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // set up chat history
+        const MAX_HISTORY = 5;
+        
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            addMessage('user-message', message);
+            input.value = '';
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+                const data = await response.json();
+                addMessage('bot-message', data.response);
+            } catch (error) {
+                addMessage('bot-message', 'Error: Could not connect to server');
+                console.error('Error:', error);
+            }
+        }
+        
+        function addMessage(className, text) {
+            const history = document.getElementById('chatHistory');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.innerHTML = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            
+            history.appendChild(messageDiv);
+            
+            // remove oldest messages if over limit
+            const messages = history.querySelectorAll('.message');
+            if (messages.length > MAX_HISTORY * 2) {
+                messages[0].remove();
+                messages[1].remove();
+            }
+            
+            history.scrollTop = history.scrollHeight;
+        }
+        
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
