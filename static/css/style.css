@@ -42,6 +42,8 @@ body {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
+    max-height: 80vh;
+    border-bottom: 1px solid #ddd;
 }
 
 /* messages */
