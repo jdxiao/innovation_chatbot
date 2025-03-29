@@ -5,7 +5,7 @@ from openai import OpenAI
 app = Flask(__name__)
 
 # initialize the OpenAI client for DeepSeek
-API_KEY = "placeholder_api_key"  # replace with your actual API key
+API_KEY = "placeholder"
 client = OpenAI(api_key=API_KEY, base_url="https://api.deepseek.com")
 
 # load data for RAG
@@ -86,16 +86,20 @@ def chat_with_ai(user_input, context):
                 - Actionable policy recommendations.
                 - Investment strategies.
                 - Technology-driven solutions.
-
-                If no relevant Canadian data is available, offer insights from successful global innovation models.
                        
-                Limit your response to 100 words.
+                Your response should be in full sentences, conversational, and informative, unless explicitly requested otherwise.
+                Avoid jargon and overly technical language. Use simple, clear language.
+                Avoid markdown formatting with the exception of bold text.
+                Use bullet points only when necessary.
+                Explicitly reference the information given as context whenever relevant.
+                Suggest 1 or 2 follow-up questions for the user to ask.
+                Limit your full response to 100 words or less.
             """},
             {"role": "user", "content": user_input},
             {"role": "system", "content": context}],
             temperature=0.7
         )
-        result = response.choices[0].message.content
+        result = response.choices[0].message.content.split("(Word count:")[0].strip()
         return result
     except Exception as e:
         return f"Error: {str(e)}"
