@@ -27,11 +27,18 @@ Ensure you have the following installed:
    git clone https://github.com/your-repo/innovation_chatbot.git
    cd innovation_chatbot
 
+2. **Set API Key**
+    ```python
+    # line in app.py
+    # replace with your DeepSeek API key
+    API_KEY = "placehold"
+    ```
+
 2. **Set up a virtual environment (recommended)**
    ```sh
    python -m venv venv
    source venv/bin/activate  # On macOS/Linux
-   venv\Scripts\activate  # On Windows
+   .\venv\Scripts\activate  # On Windows
 
 3. **Install dependencies**
    ```sh

@@ -5,7 +5,7 @@ from openai import OpenAI
 app = Flask(__name__)
 
 # initialize the OpenAI client for DeepSeek
-API_KEY = "placeholder"
+API_KEY = "placehold"
 client = OpenAI(api_key=API_KEY, base_url="https://api.deepseek.com")
 
 # load data for RAG
